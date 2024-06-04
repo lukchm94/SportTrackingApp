@@ -38,3 +38,4 @@ dev = [
 
 [tool.pdm.scripts]
 prod = 'pdm run python app/manage.py runserver'
+migrate = 'pdm run python app/manage.py migrate'
