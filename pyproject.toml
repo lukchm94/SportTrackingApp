@@ -35,3 +35,6 @@ dev = [
     "black>=24.4.2",
     "isort>=5.13.2",
 ]
+
+[tool.pdm.scripts]
+prod = 'pdm run python app/manage.py runserver'

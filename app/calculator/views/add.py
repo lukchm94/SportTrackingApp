@@ -1,4 +1,3 @@
-# calculator/views.py
 from django.http import HttpRequest, JsonResponse
 
 

@@ -46,3 +46,5 @@ class Paths(str, ValidationEnum):
     admin = "admin"
     calc = "calculator"
     calc_path = f"{calc}{root}"
+    health = "health"
+    health_path = f"{health}{root}"
