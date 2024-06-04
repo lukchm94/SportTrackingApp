@@ -2,9 +2,9 @@
 from django.urls import path
 
 from .__calc_config import Paths
-from .views import add, health
+from .views import calculate, health
 
 urlpatterns = [
-    path(Paths.add_path.value, add.add, name=Paths.add.value),
+    path(Paths.add_path.value, calculate.calculate, name=Paths.calc.value),
     path(Paths.health_path.value, health.health, name=Paths.health.value),
 ]

@@ -34,8 +34,15 @@ target-version = ['py38', 'py39', 'py310', 'py311']
 dev = [
     "black>=24.4.2",
     "isort>=5.13.2",
+    "sqlalchemy>=2.0.0",
+    "mysql-connector-python>=4.0.0",
+    "pymysql>=1.1.0",
+    "black>=22.8.0",
+    "pydantic>=2.0.0",
+    "pymysql>=1.1.1"
 ]
 
 [tool.pdm.scripts]
 prod = 'pdm run python app/manage.py runserver'
 migrate = 'pdm run python app/manage.py migrate'
+make_migration = 'pdm run python app/manage.py makemigrations'

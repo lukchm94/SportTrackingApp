@@ -44,8 +44,16 @@ class ValidationEnum(Enum):
 class Paths(str, ValidationEnum):
     root = "/"
     admin = "admin"
-    calc = "calculator"
+    calc = "calculate"
     add = "add"
     add_path = f"{add}{root}"
     health = "health"
     health_path = f"{health}{root}"
+
+
+class MathOperation(str, ValidationEnum):
+    add = "add"
+    subtract = "subtract"
+    multiply = "multiply"
+    divide = "divide"
+    none = ""
