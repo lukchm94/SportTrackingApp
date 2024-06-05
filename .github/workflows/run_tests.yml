@@ -1,19 +1,15 @@
 name: Run Tests
 
 on:
-    pull_request:
-        branches:
-            - main
-
     push:
-        branches:
-            - main
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
 
 jobs:
     tests:
         runs-on:
-            - self-hosted
-            - X64
+            - ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v3
