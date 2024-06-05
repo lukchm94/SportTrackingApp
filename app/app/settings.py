@@ -10,33 +10,32 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 import pymysql
+from dotenv import load_dotenv
 
 pymysql.version_info = (1, 4, 13, "final", 0)
 pymysql.install_as_MySQLdb()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_NAME = "sport_tracking_db"
-USER = "root"
-PASSWORD = "password"
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+load_dotenv(".env")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-rh5ll0rgvp3kdq_(cdd6^c+!x*mu-a$0)wyh1y7h@axt98$_8*"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Load ENV files
+RDB_NAME = os.getenv("RDB_NAME")
+RDB_USER = os.getenv("RDB_USER")
+RDB_PASSWORD = os.getenv("RDB_PASSWORD")
+RDB_HOST = os.getenv("RDB_HOST")
+RDB_PORT = os.getenv("RDB_PORT")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     "calculator.apps.CalculatorConfig",
     "django.contrib.admin",
@@ -91,11 +90,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": DB_NAME,
-        "USER": USER,
-        "PASSWORD": PASSWORD,
-        "HOST": "localhost",
-        "PORT": "3306",
+        "NAME": RDB_NAME,
+        "USER": RDB_USER,
+        "PASSWORD": RDB_PASSWORD,
+        "HOST": RDB_HOST,
+        "PORT": RDB_PORT,
         "OPTIONS": {
             "charset": "utf8mb4",
         },
