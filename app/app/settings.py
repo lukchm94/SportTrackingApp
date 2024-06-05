@@ -22,7 +22,14 @@ pymysql.install_as_MySQLdb()
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
-load_dotenv(".env")
+# Determine the environment
+ENV = os.getenv("DJANGO_ENV", "production")
+
+# Load environment variables from the appropriate .env file
+if ENV == "test":
+    load_dotenv(".env.test")
+else:
+    load_dotenv(".env")
 
 # Load ENV files
 RDB_NAME = os.getenv("RDB_NAME")
