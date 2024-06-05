@@ -3,6 +3,7 @@ from typing import Union
 from pydantic import BaseModel, Field, field_validator
 
 from ..__calc_config import MathOperation
+from ..__exceptions import OperationError
 
 
 class OperationReq(BaseModel):
@@ -16,7 +17,7 @@ class OperationReq(BaseModel):
     @field_validator("operation")
     def validate_operation(cls, value):
         if value not in MathOperation.list():
-            raise ValueError()
+            raise OperationError(value)
         return value
 
 

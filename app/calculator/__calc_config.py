@@ -57,3 +57,20 @@ class MathOperation(str, ValidationEnum):
     multiply = "multiply"
     divide = "divide"
     none = ""
+
+
+class HttpMethods(str, ValidationEnum):
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    DELETE = "DELETE"
+    HEAD = "HEAD"
+    OPTIONS = "OPTIONS"
+    PATCH = "PATCH"
+    TRACE = "TRACE"
+    CONNECT = "CONNECT"
+
+
+class CalcTemplates(str, ValidationEnum):
+    calculate = "calculator/calculate.html"
+    error = "calculator/invalid_operation.html"

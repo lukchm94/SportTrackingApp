@@ -1,7 +1,7 @@
 from typing import Union
 
 from ..__calc_config import MathOperation
-from ..__exceptions import InvalidOperation
+from ..__exceptions import DivisionByZeroError, OperationError
 from ..models.operation import OperationReq, OperationResp
 
 
@@ -27,8 +27,9 @@ class Calculate:
         return self.req.num1 * self.req.num2
 
     def _divide(self) -> int:
+        print("divide")
         if self.req.num2 == 0:
-            return None
+            raise DivisionByZeroError(self.req.num1, self.req.num2)
         return self.req.num1 / self.req.num2
 
     def run(self) -> OperationResp:
@@ -52,13 +53,13 @@ class Calculate:
             result: int = self._divide()
 
         else:
-            raise InvalidOperation()
+            raise OperationError(self.req.operation)
 
         return OperationResp(
             num1=self.req.num1,
             num2=self.req.num2,
             operation=self.req.operation,
-            result=result if result is not None else 1,
+            result=result,
         )
 
     def get_context(self) -> dict:
@@ -75,3 +76,9 @@ class Calculate:
             "num2": operation_resp.num2,
             "operation": operation_resp.operation,
         }
+
+
+def get_error_context(
+    num1: Union[int, float], num2: Union[int, float], operation: str, err: Exception
+) -> dict:
+    return {"operation": operation, "num1": num1, "num2": num2, "err": err}

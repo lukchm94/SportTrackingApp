@@ -6,8 +6,9 @@
     <title>Result</title>
 </head>
 <body>
-    <h1>Result</h1>
-    <p>Result of {{operation}} of {{num1}} and {{num2}} is: {{ result }}</p>
+    <h1>Error</h1>
+    <p>Invalid Operation: {{ operation }} for numbers: {{num1}}, {{num2}}</p>
+    <p>Error details: {{ err }}</p>
     <form action="{% url 'calculate' %}" method="get">
         <button type="submit">Calculate Another number</button>
     </form>
