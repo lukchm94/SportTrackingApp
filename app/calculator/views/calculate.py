@@ -1,3 +1,5 @@
+from multiprocessing import context
+
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.template import Template, loader
@@ -8,8 +10,15 @@ from ..service.operations import Calculate, get_error_context
 
 
 def enter_numbers(req: HttpRequest) -> HttpResponse:
-    template = loader.get_template("calculator/enter_numbers.html")
-    return HttpResponse(template.render({}, req))
+    template: Template = loader.get_template("calculator/enter_numbers.html")
+    context: dict = {
+        "allowed_operations": [
+            operation
+            for operation in MathOperation.list()
+            if operation is not MathOperation.none.value
+        ]
+    }
+    return HttpResponse(template.render(context, req))
 
 
 def calculate(req: HttpRequest) -> HttpResponse:

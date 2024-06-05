@@ -42,11 +42,12 @@ class ValidationEnum(Enum):
 
 
 class Paths(str, ValidationEnum):
+    none = ""
     root = "/"
     admin = "admin"
     calc = "calculate"
-    add = "add"
-    add_path = f"{add}{root}"
+    enter_num = "enter_numbers"
+    enter_num_path = f"{enter_num}{root}"
     health = "health"
     health_path = f"{health}{root}"
 

@@ -1,0 +1,37 @@
+name: Run Tests
+
+on:
+    pull_request:
+        branches:
+            - main
+
+    push:
+        branches:
+            - main
+
+jobs:
+    tests:
+        runs-on:
+            - self-hosted
+            - X64
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+        
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.11'
+            
+            - name: Setup PDM
+              uses: pdm-project/setup-pdm@v3 
+              with:
+                python-version: '3.11'
+                cache: 'true'
+
+            - name: Install dependencies
+              run: pdm install
+        
+            - name: Run code formatting check
+              run: pdm run check_code_format
+        

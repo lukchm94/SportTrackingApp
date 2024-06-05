@@ -39,10 +39,15 @@ dev = [
     "pymysql>=1.1.0",
     "black>=22.8.0",
     "pydantic>=2.0.0",
-    "pymysql>=1.1.1"
+    "pymysql>=1.1.1",
+    "coverage>=7.5.3"
 ]
 
 [tool.pdm.scripts]
 prod = 'pdm run python app/manage.py runserver'
 migrate = 'pdm run python app/manage.py migrate'
 make_migration = 'pdm run python app/manage.py makemigrations'
+test_calculator = "pdm run coverage run --source='.' app/manage.py test calculator"
+coverage_report = 'pdm run coverage report'
+check_code_format = 'black --check app/'
+format_code = 'black app/'
