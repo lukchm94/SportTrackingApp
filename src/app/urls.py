@@ -22,5 +22,6 @@ from .__app_configs import Paths
 
 urlpatterns = [
     path(Paths.calc_path.value, include("calculator.urls")),
-    path(Paths.admin.value, admin.site.urls),
+    path(Paths.tennis_path.value, include("tennis.urls")),
+    path(Paths.admin_path.value, admin.site.urls),
 ]

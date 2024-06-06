@@ -42,9 +42,37 @@ class ValidationEnum(Enum):
 
 
 class Paths(str, ValidationEnum):
+    none = ""
     root = "/"
     admin = "admin"
-    calc = "calculator"
-    calc_path = f"{calc}{root}"
+    calc = "calculate"
+    enter_num = "enter_numbers"
+    enter_num_path = f"{enter_num}{root}"
     health = "health"
     health_path = f"{health}{root}"
+
+
+class MathOperation(str, ValidationEnum):
+    add = "add"
+    subtract = "subtract"
+    multiply = "multiply"
+    divide = "divide"
+    none = ""
+
+
+class HttpMethods(str, ValidationEnum):
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    DELETE = "DELETE"
+    HEAD = "HEAD"
+    OPTIONS = "OPTIONS"
+    PATCH = "PATCH"
+    TRACE = "TRACE"
+    CONNECT = "CONNECT"
+
+
+class CalcTemplates(str, ValidationEnum):
+    calculate = "calculator/calculate.html"
+    error = "calculator/invalid_operation.html"
+    enter = "calculator/enter_numbers.html"
