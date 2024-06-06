@@ -1,25 +1,21 @@
+from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
-from ..__tennis_config import HttpMethods, Templates
+from app.__app_configs import HttpMethods
+
+from ..__tennis_config import Templates
 from ..forms.player import TennisPlayerForm
+from ..services.add_player import Add
 
 
 def add_player(req: HttpRequest) -> HttpResponse:
-    print(f"req.method is: {req.method}")
-    if req.method == HttpMethods.POST.value:
-        print("inside POST")
-        form = TennisPlayerForm(req.POST)
-        print(form.is_valid())
-        if form.is_valid():
-            form.save()
-            return redirect("success")
-        else:
-            print(form.errors)
-    else:
-        form = TennisPlayerForm()
-
-    return render(req, Templates.add_player.value, {"form": form})
+    form: ModelForm = (
+        TennisPlayerForm(req.POST)
+        if req.method == HttpMethods.POST.value
+        else TennisPlayerForm()
+    )
+    return Add(form, req).save()
 
 
 def success(req: HttpRequest) -> HttpResponse:

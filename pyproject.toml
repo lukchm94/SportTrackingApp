@@ -46,10 +46,15 @@ dev = [
 
 [tool.pdm.scripts]
 prod = 'pdm run python src/manage.py runserver'
+
 migrate = 'pdm run python src/manage.py migrate'
 make_migration = 'pdm run python src/manage.py makemigrations'
-test_calculator = "pdm run coverage run --source='.' src/manage.py test calculator"
-tests = "pdm run coverage run --source='.' src/manage.py test"
-coverage_report = 'pdm run coverage report'
+
 check_code_format = 'black --check src/'
 format_code = 'black src/'
+
+test_app = "pdm run coverage run --source='.' src/manage.py test app"
+test_calculator = "pdm run coverage run --source='.' src/manage.py test calculator"
+test_tennis = "pdm run coverage run --source='.' src/manage.py test tennis"
+
+coverage_report = 'pdm run coverage report'

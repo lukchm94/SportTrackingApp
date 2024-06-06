@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+    <h1>Error</h1>
+    <p>Error occured when saving tennis player to database!</p>
+    <p>Error details: {{ err }}</p>
+    <form action="{% url 'add_player' %}" method="get">
+        <button type="submit">Try again</button>
+    </form>
+</body>
+</html>

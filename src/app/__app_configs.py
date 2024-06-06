@@ -49,3 +49,17 @@ class Paths(str, ValidationEnum):
     calc_path = f"{calc}{root}"
     tennis = "tennis"
     tennis_path = f"{tennis}{root}"
+    health = "health"
+    health_path = f"{health}{root}"
+
+
+class HttpMethods(str, ValidationEnum):
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    DELETE = "DELETE"
+    HEAD = "HEAD"
+    OPTIONS = "OPTIONS"
+    PATCH = "PATCH"
+    TRACE = "TRACE"
+    CONNECT = "CONNECT"

@@ -2,13 +2,15 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.template import Template, loader
 
-from ..__calc_config import CalcTemplates, HttpMethods, MathOperation
+from app.__app_configs import HttpMethods
+
+from ..__calc_config import MathOperation, Templates
 from ..__exceptions import DivisionByZeroError, OperationError
 from ..service.operations import Calculate, get_error_context
 
 
 def enter_numbers(req: HttpRequest) -> HttpResponse:
-    template: Template = loader.get_template(CalcTemplates.enter.value)
+    template: Template = loader.get_template(Templates.enter.value)
     context: dict = {
         "allowed_operations": [
             operation
@@ -35,11 +37,11 @@ def calculate(req: HttpRequest) -> HttpResponse:
         operation = req.POST.get("operation", MathOperation.none.value)
 
         try:
-            template: Template = loader.get_template(CalcTemplates.calculate.value)
+            template: Template = loader.get_template(Templates.calculate.value)
             context: dict = Calculate(num1, num2, operation).get_context()
 
         except (DivisionByZeroError, OperationError) as err:
-            template: Template = loader.get_template(CalcTemplates.error.value)
+            template: Template = loader.get_template(Templates.error.value)
             context: dict = get_error_context(num1, num2, operation, err)
 
         return HttpResponse(template.render(context, req))
