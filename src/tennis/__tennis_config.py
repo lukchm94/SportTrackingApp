@@ -10,6 +10,10 @@ class Templates(str, ValidationEnum):
 class Urls(str, ValidationEnum):
     root = "/"
     none = ""
+    add_player = "add_player"
     success = "success"
     success_path = f"{success}{root}"
-    add_player = "add_player"
+    find_player = "find_player"
+    find_player_path = f"{find_player}{root}"
+    all = "all"
+    all_path = f"{all}{root}"
