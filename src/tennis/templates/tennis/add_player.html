@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Tennis Player Details</title>
+</head>
+<body>
+    <h1>Enter Tennis Player Details</h1>
+    <form action="{% url 'add_player' %}" method="post">
+        {% csrf_token %}
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required><br><br>
+        
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+
+        <label for="nationality">Nationality:</label>
+        <input type="text" id="nationality" name="nationality" required><br><br>
+        
+        <label for="date_of_birth">Date of Birth:</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" required><br><br>
+
+        <label for="racket_brand">Racket Brand:</label>
+        <input type="text" id="racket_brand" name="racket_brand" required><br><br>
+
+        <label for="racket_model">Racket Model:</label>
+        <input type="text" id="racket_model" name="racket_model" required><br><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

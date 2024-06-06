@@ -19,8 +19,11 @@ from django.contrib import admin
 from django.urls import include, path
 
 from .__app_configs import Paths
+from .views.health import health
 
 urlpatterns = [
     path(Paths.calc_path.value, include("calculator.urls")),
-    path(Paths.admin.value, admin.site.urls),
+    path(Paths.tennis_path.value, include("tennis.urls")),
+    path(Paths.admin_path.value, admin.site.urls),
+    path(Paths.health_path.value, health, name=Paths.health.value),
 ]
