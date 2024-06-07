@@ -41,7 +41,9 @@ dev = [
     "pydantic>=2.0.0",
     "pymysql>=1.1.1",
     "coverage>=7.5.3",
-    "python-dotenv>=1.0.0"
+    "python-dotenv>=1.0.0",
+    "drf-yasg>=1.21.7",
+    "setuptools>=70.0.0"
 ]
 
 [tool.pdm.scripts]

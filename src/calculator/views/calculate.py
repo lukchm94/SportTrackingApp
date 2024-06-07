@@ -1,6 +1,10 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.template import Template, loader
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+from rest_framework.serializers import CharField, IntegerField, Serializer
 
 from app.__app_configs import HttpMethods
 
@@ -21,6 +25,32 @@ def enter_numbers(req: HttpRequest) -> HttpResponse:
     return HttpResponse(template.render(context, req))
 
 
+class CalculationSerializer(Serializer):
+    num1 = IntegerField()
+    num2 = IntegerField()
+    operation = CharField()
+
+
+# @swagger_auto_schema(
+#     method="POST",
+#     request_body=CalculationSerializer,
+#     responses={200: openapi.Response(description="Success")},
+#     operation_description="The endpoint to perform mathematical operations on two numbers",
+# )
+@api_view(["POST"])  # Define the HTTP methods allowed for this view
+@swagger_auto_schema(
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "num1": openapi.Schema(type=openapi.TYPE_INTEGER),
+            "num2": openapi.Schema(type=openapi.TYPE_INTEGER),
+            "operation": openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=["num1", "num2", "operation"],
+    ),
+    responses={200: "Success response description"},
+    operation_description="Description of your endpoint here",
+)
 def calculate(req: HttpRequest) -> HttpResponse:
     """
     The function calculates and renders a response using a template and context data based on an HTTP
@@ -32,9 +62,18 @@ def calculate(req: HttpRequest) -> HttpResponse:
     "calculator/calculate.html" with the context data obtained from the Calculate class.
     """
     if req.method == HttpMethods.POST.value:
-        num1 = int(req.POST.get("num1", 1))
-        num2 = int(req.POST.get("num2", 1))
-        operation = req.POST.get("operation", MathOperation.none.value)
+        serializer = CalculationSerializer(data=req.POST)
+        if not serializer.is_valid():
+            num1 = int(req.POST.get("num1", 1))
+            num2 = int(req.POST.get("num2", 1))
+            operation = req.POST.get("operation", MathOperation.none.value)
+            context: dict = get_error_context(
+                num1, num2, operation, "Data not validated"
+            )
+
+        num1: int = serializer.validated_data["num1"]
+        num2: int = serializer.validated_data["num2"]
+        operation: str = serializer.validated_data["operation"]
 
         try:
             template: Template = loader.get_template(Templates.calculate.value)
