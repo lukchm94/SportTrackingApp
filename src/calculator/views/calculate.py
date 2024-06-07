@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.template import Template, loader
 from drf_yasg import openapi
@@ -31,13 +31,7 @@ class CalculationSerializer(Serializer):
     operation = CharField()
 
 
-# @swagger_auto_schema(
-#     method="POST",
-#     request_body=CalculationSerializer,
-#     responses={200: openapi.Response(description="Success")},
-#     operation_description="The endpoint to perform mathematical operations on two numbers",
-# )
-@api_view(["POST"])  # Define the HTTP methods allowed for this view
+@api_view([HttpMethods.POST.value, HttpMethods.GET.value])
 @swagger_auto_schema(
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
@@ -48,8 +42,11 @@ class CalculationSerializer(Serializer):
         },
         required=["num1", "num2", "operation"],
     ),
-    responses={200: "Success response description"},
-    operation_description="Description of your endpoint here",
+    responses={
+        200: "Success response description",
+        422: "Invalid numbers or division by 0 entered",
+    },
+    operation_description="Endpoint to render http template to calculate math operations on the two numbers",
 )
 def calculate(req: HttpRequest) -> HttpResponse:
     """
@@ -61,27 +58,25 @@ def calculate(req: HttpRequest) -> HttpResponse:
     :return: An HttpResponse object is being returned, which is the result of rendering the template
     "calculator/calculate.html" with the context data obtained from the Calculate class.
     """
-    if req.method == HttpMethods.POST.value:
-        serializer = CalculationSerializer(data=req.POST)
-        if not serializer.is_valid():
-            num1 = int(req.POST.get("num1", 1))
-            num2 = int(req.POST.get("num2", 1))
-            operation = req.POST.get("operation", MathOperation.none.value)
-            context: dict = get_error_context(
-                num1, num2, operation, "Data not validated"
-            )
+    if req.method == HttpMethods.GET.value:
+        return redirect("enter_numbers")
+    if req.POST.__len__() == 0:
+        template: Template = loader.get_template(Templates.error.value)
+        context: dict = get_error_context(num1, num2, operation, "No params provided")
+        return HttpResponse(template.render(context, req))
 
+    serializer = CalculationSerializer(data=req.POST)
+    if serializer.is_valid():
         num1: int = serializer.validated_data["num1"]
         num2: int = serializer.validated_data["num2"]
         operation: str = serializer.validated_data["operation"]
 
-        try:
-            template: Template = loader.get_template(Templates.calculate.value)
-            context: dict = Calculate(num1, num2, operation).get_context()
+    try:
+        template: Template = loader.get_template(Templates.calculate.value)
+        context: dict = Calculate(num1, num2, operation).get_context()
 
-        except (DivisionByZeroError, OperationError) as err:
-            template: Template = loader.get_template(Templates.error.value)
-            context: dict = get_error_context(num1, num2, operation, err)
+    except (DivisionByZeroError, OperationError) as err:
+        template: Template = loader.get_template(Templates.error.value)
+        context: dict = get_error_context(num1, num2, operation, err)
 
-        return HttpResponse(template.render(context, req))
-    return redirect("enter_numbers")
+    return HttpResponse(template.render(context, req))
