@@ -1,36 +1,30 @@
 from django.db.models import QuerySet
-from django.forms.models import model_to_dict
 from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
-from drf_yasg.openapi import TYPE_INTEGER, TYPE_OBJECT, TYPE_STRING, Schema
-from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.serializers import CharField, Serializer
+from rest_framework.serializers import CharField, ModelSerializer, Serializer
 
 from app.__app_configs import HttpMethods
 
 from ..models.player import TennisPlayer
+from ..serializers.player import PlayerNotFoundError, PlayerReq, PlayerResp
 
 
-class FindPlayerSerializer(Serializer):
-    first_name = CharField()
-    last_name = CharField()
-
-
-@api_view([HttpMethods.GET.value])
-@swagger_auto_schema(
-    request_body=Schema(
-        type=TYPE_OBJECT,
-        properties={
-            "first_name": Schema(type=TYPE_STRING),
-            "last_name": Schema(type=TYPE_STRING),
-        },
-        required=["first_name", "last_name"],
-    ),
-    responses={200: "Success response description"},
-    operation_description="Endpoint to render http template to calculate math operations on the two numbers",
+@extend_schema(
+    responses={
+        status.HTTP_200_OK: PlayerResp,
+        status.HTTP_404_NOT_FOUND: PlayerNotFoundError,
+    },
+    summary="Find Player by First and Last Names",
+    description="""This endpoint takes the HttpRequest object, validates the input data using a serializer,
+    retrieves a TennisPlayer object based on the provided first name and last name, and returns the
+    player's data in a JSON response.""",
+    methods=[HttpMethods.GET.value],
 )
+@api_view([HttpMethods.GET.value])
 def find_player(req: HttpRequest) -> JsonResponse:
-    serializer = FindPlayerSerializer(data=req.GET)
+    serializer = PlayerReq(data=req.GET)
 
     if not serializer.is_valid():
         return HttpResponseBadRequest("Please provide both first name and last name.")
@@ -40,24 +34,42 @@ def find_player(req: HttpRequest) -> JsonResponse:
         player: TennisPlayer = TennisPlayer.objects.get(
             first_name=first_name, last_name=last_name
         )
+        player_data: PlayerResp = PlayerResp(player).data
         return JsonResponse(
             {
                 "method": req.method,
-                "data": model_to_dict(player),
-            }
+                "data": player_data,
+            },
         )
     except TennisPlayer.DoesNotExist:
-        return JsonResponse({"error": "Player not found"}, status=404)
+        return JsonResponse(
+            {"error": "Player not found"}, status=status.HTTP_404_NOT_FOUND
+        )
 
 
+@api_view([HttpMethods.GET.value])
 def all_players(req: HttpRequest) -> JsonResponse:
+    """
+    This function retrieves all tennis players from the database and returns a JSON response with
+    information about the players.
+
+    :param req: The `req` parameter in the `all_players` function is of type `HttpRequest`, which is
+    typically a request object representing an incoming HTTP request. It contains information about the
+    request made by the client, such as headers, method, body, and other request-related data
+    :type req: HttpRequest
+    :return: The `all_players` function returns a JSON response containing the HTTP method used in the
+    request, the total number of players retrieved from the database, and a list of player data in JSON
+    format. If an exception of type `TennisPlayer.DoesNotExist` is raised (indicating that no players
+    were found), it returns a JSON response with an error message and a status code of 404.
+    """
     try:
         players: QuerySet = TennisPlayer.objects.all().values()
+        players_data: PlayerResp = [PlayerResp(player).data for player in players]
         return JsonResponse(
             {
                 "method": req.method,
-                "players": len([p for p in players]),
-                "data": [p for p in players],
+                "players": len(players_data),
+                "data": players_data,
             }
         )
     except TennisPlayer.DoesNotExist:

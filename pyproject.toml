@@ -7,6 +7,19 @@ authors = [
 ]
 dependencies = [
     "django>=5.0.6",
+    "black>=24.4.2",
+    "isort>=5.13.2",
+    "sqlalchemy>=2.0.0",
+    "mysql-connector-python>=4.0.0",
+    "pymysql>=1.1.0",
+    "black>=22.8.0",
+    "pydantic>=2.0.0",
+    "pymysql>=1.1.1",
+    "coverage>=7.5.3",
+    "python-dotenv>=1.0.0",
+    "drf-yasg>=1.21.7",
+    "setuptools>=70.0.0",
+    "drf-spectacular>=0.27.2"
 ]
 requires-python = ">=3.11"
 readme = "README.md"
@@ -43,7 +56,8 @@ dev = [
     "coverage>=7.5.3",
     "python-dotenv>=1.0.0",
     "drf-yasg>=1.21.7",
-    "setuptools>=70.0.0"
+    "setuptools>=70.0.0",
+    "drf-spectacular>=0.27.2"
 ]
 
 [tool.pdm.scripts]
@@ -59,4 +73,11 @@ test_app = "pdm run coverage run --source='.' src/manage.py test app"
 test_calculator = "pdm run coverage run --source='.' src/manage.py test calculator"
 test_tennis = "pdm run coverage run --source='.' src/manage.py test tennis"
 
-coverage_report = 'pdm run coverage report'
+coverage_report = 'pdm run coverage html'
+
+test_coverage = [
+    "pdm run coverage run --source='.' src/manage.py test app",
+    "pdm run coverage run --source='.' src/manage.py test calculator",
+    "pdm run coverage run --source='.' src/manage.py test tennis",
+    "pdm run coverage html"
+]
